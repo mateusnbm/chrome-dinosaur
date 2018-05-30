@@ -24,6 +24,32 @@ game_window_top_padding = 260
 game_window_right_padding = 30
 game_window_bottom_padding = 30
 
+game_over_letter_m_x = 537
+game_over_letter_m_y = 83
+game_over_letter_v_x = 704
+game_over_letter_v_y = 83
+game_over_letter_colors = [82, 83, 84]
+
+
+'''
+Captures a screenshot of the given rect and returns a PIL Image object.
+'''
+
+def capture_screenshot(rect):
+
+    x = rect[0][0]
+    y = rect[0][1]
+    w = rect[1][0]
+    h = rect[1][1]
+
+    monitor_rect = {'left': x, 'top': y, 'width': w, 'height': h}
+
+    sct = mss.mss()
+    sct_img = sct.grab(monitor_rect)
+    pil_img = Image.frombytes('RGB', sct_img.size, sct_img.bgra, 'raw', 'BGRX')
+
+    return pil_img
+
 
 '''
 Finds the game from a screenshot and computes an approximated bounding box.
@@ -72,12 +98,12 @@ def findGameBoundaries():
     # Compute the game bounding box. This will determine the portion of the
     # screen that we analyse in each iteration of our controller.
 
-    x0 = (x0 - game_window_left_padding)
-    y0 = (y0 - game_window_top_padding)
-    width = (xn - x0 + game_window_left_padding + game_window_right_padding)
-    height = (game_window_top_padding + game_window_bottom_padding)
+    x = x0 - game_window_left_padding
+    y = y0 - game_window_top_padding
+    w = xn - x0 + game_window_left_padding + game_window_right_padding
+    h = game_window_top_padding + game_window_bottom_padding
 
-    bounding_box = ((x0, y0), (width, height))
+    bounding_box = ((x, y), (w, h))
 
     # Draw a rectangle over the captured screen showing the inferred bounding
     # box, this is helpful while debugging the application.
@@ -86,8 +112,21 @@ def findGameBoundaries():
     yn = bounding_box[0][1]+bounding_box[1][1]
 
     draw = ImageDraw.Draw(image)
-    draw.rectangle(((x0, y0), (xn, yn)), outline="red")
+    draw.rectangle(((x, y), (xn, yn)), outline="red")
     image.save('configuration/game_bounding_box.png')
+
+    # It is necessary to adjust the bounding box in case this program is
+    # running on a computer with retina display (@2x), to account for the
+    # doubled screenshot size.
+
+    if retina_monitor == True:
+
+        x = bounding_box[0][0]/2
+        y = bounding_box[0][1]/2
+        w = bounding_box[1][0]/2
+        h = bounding_box[1][1]/2
+
+        bounding_box = ((x, y), (w, h))
 
     return bounding_box
 
@@ -96,40 +135,16 @@ def findGameBoundaries():
 Find the dinosaur and computes an approximated bounding box.
 '''
 
-def findDino(game_rect):
+def findDino(game_screenshot):
 
     lock0 = False
     x0 = y0 = 0
 
-    # Capture the portion of the screen that contains the game, so, we restrain
-    # the search area to a smaller portion of the screen.
-
-    monitor_rect = {
-        'top': game_rect[0][1],
-        'left': game_rect[0][0],
-        'width': game_rect[1][0],
-        'height': game_rect[1][1],
-        }
-
-    if retina_monitor == True:
-
-        # It is necessary to make this adjustment in retina displays (@2x)
-        # since MSS stipulates monitor coordinates in standard resolution (@1x).
-
-        monitor_rect['top'] /= 2
-        monitor_rect['left'] /= 2
-        monitor_rect['width'] /= 2
-        monitor_rect['height'] /= 2
-
-    sct = mss.mss()
-    sct_img = sct.grab(monitor_rect)
-
     # Load the image so we can iterate through the pixels looking for the
     # left-most pixel of the dino (its tail).
 
-    image = Image.frombytes('RGB', sct_img.size, sct_img.bgra, 'raw', 'BGRX')
-    image_pixels = image.load()
-    width, height = image.size
+    image_pixels = game_screenshot.load()
+    width, height = game_screenshot.size
 
     for x in range(100):
 
@@ -156,8 +171,25 @@ def findDino(game_rect):
     xn = bounding_box[0][0]+bounding_box[1][0]
     yn = bounding_box[0][1]+bounding_box[1][1]
 
-    draw = ImageDraw.Draw(image)
+    draw = ImageDraw.Draw(game_screenshot)
     draw.rectangle(((x0, y0), (xn, yn)), outline="purple")
-    image.save("configuration/dinos_bounding_box.png")
+    game_screenshot.save("configuration/dinos_bounding_box.png")
 
     return bounding_box
+
+
+'''
+Determines if the game over screen is visible in the given frame.
+'''
+
+def game_over(game_screenshot):
+
+    pixels = game_screenshot.load()
+
+    # Check the position of the first pixels that compose the letters M and V
+    # from the game over sign to see if they match the dinosaur color.
+
+    m = pixels[game_over_letter_m_x, game_over_letter_m_y][0]
+    v = pixels[game_over_letter_v_x, game_over_letter_v_y][0]
+
+    return (m in game_over_letter_colors) and (v in game_over_letter_colors)
