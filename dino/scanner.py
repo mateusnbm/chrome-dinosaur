@@ -1,5 +1,5 @@
 #
-# dino_scanner.py
+# scanner.py
 #
 
 
