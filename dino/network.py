@@ -101,10 +101,14 @@ class NeuralNetwork():
 
     def think(self, inputs):
 
+        inputs = np.array(inputs, dtype=float)
+
         output = self.__sigmoid(dot(inputs, self.layers[0].synaptic_weights))
+        #output = np.tanh(dot(inputs, self.layers[0].synaptic_weights))
 
         for i in range(len(self.layers)-1):
 
             output = self.__sigmoid(dot(output, self.layers[i+1].synaptic_weights))
+            #output = np.tanh(dot(output, self.layers[i+1].synaptic_weights))
 
         return output

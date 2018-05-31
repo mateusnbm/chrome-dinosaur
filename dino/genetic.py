@@ -74,6 +74,12 @@ class Genome():
 
         if rdn > prb:
 
+            '''
             mutation_index = random.randint(0, len(self.genes)-1)
 
             self.genes[mutation_index] *= random.uniform(0, 1)
+            '''
+
+            for i in range(len(self.genes)):
+
+                self.genes[i] *= random.uniform(0, 1)

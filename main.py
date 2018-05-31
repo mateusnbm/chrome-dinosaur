@@ -13,6 +13,7 @@ from pykeyboard import PyKeyboard
 
 import dino.scanner
 import dino.sensors
+import dino.conveniences
 
 from dino.genetic import Genome
 from dino.network import NeuronLayer, NeuralNetwork
@@ -29,7 +30,8 @@ game_rect = dino.scanner.findGameBoundaries()
 game_screenshot = dino.scanner.capture_screenshot(game_rect)
 dino_rect = dino.scanner.findDino(game_screenshot)
 
-filename = "genomes/" + str(datetime.datetime.now()) + ".txt"
+fileid = str(int(time.time()) )
+filename = "genomes/" + fileid + ".txt"
 file = open(filename, 'w+')
 
 
@@ -42,11 +44,12 @@ mutation_probability = 0.2
 
 genomes_cut = 6
 genomes_size = 32
-genomes_count = 8#12
+genomes_count = 12
 genomes_index = 0
 genomes_generation = 1
 
-genomes = [Genome(length=genomes_size) for _ in range(genomes_count)]
+#genomes = [Genome(length=genomes_size) for _ in range(genomes_count)]
+genomes = dino.conveniences.load_genomes_from_file("genomes/1527730740.txt", genomes_count, genomes_size)
 
 layer_1 = NeuronLayer(number_of_neurons=4, number_of_inputs_per_neuron=3)
 layer_2 = NeuronLayer(number_of_neurons=4, number_of_inputs_per_neuron=4)
@@ -183,7 +186,7 @@ while(1):
     # for a keypress after each execution.
 
     keyboard.tap_key('return')
-    time.sleep(0.5)
+    time.sleep(0.1)
 
 '''
 Terminate.
