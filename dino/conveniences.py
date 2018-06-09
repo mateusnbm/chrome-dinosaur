@@ -23,7 +23,8 @@ def load_genomes_from_file(filename, genomes_count, genomes_size):
 
         genome = Genome(length=genomes_size)
         genome.genes = reader[-i-1][:-1]
-        genome.fitness = reader[-i-1][-1]
+        genome.fitness = float(reader[-i-1][-1])
+        genome.genes = [float(x) for x in genome.genes]
 
         genomes.append(genome)
 

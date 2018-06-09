@@ -49,7 +49,7 @@ genomes_index = 0
 genomes_generation = 1
 
 #genomes = [Genome(length=genomes_size) for _ in range(genomes_count)]
-genomes = dino.conveniences.load_genomes_from_file("genomes/1527730740.txt", genomes_count, genomes_size)
+genomes = dino.conveniences.load_genomes_from_file("genomes/1528251380.txt", genomes_count, genomes_size)
 
 layer_1 = NeuronLayer(number_of_neurons=4, number_of_inputs_per_neuron=3)
 layer_2 = NeuronLayer(number_of_neurons=4, number_of_inputs_per_neuron=4)
@@ -138,7 +138,7 @@ while(1):
 
     # Update the genome's fitness, persist it and update the test index.
 
-    genomes[genomes_index].fitness = jumps_count
+    genomes[genomes_index].add_fitness(jumps_count)
     file.write(str(genomes[genomes_index]) + "\n")
     genomes_index += 1
 
@@ -146,11 +146,11 @@ while(1):
     # recombinations/mutations to generate new 6 genomes, then, start the
     # cycle again.
 
-    if genomes_index == (genomes_count-1):
+    if genomes_index == genomes_count:
 
         # Sort genomes by their fitnesses and remove the worst.
 
-        genomes = sorted(genomes, key=lambda x: x.fitness, reverse=True)
+        genomes = sorted(genomes, key=lambda x: x.get_fitness(), reverse=True)
         genomes = genomes[:genomes_cut]
 
         # Select parents, recombine, mutate childs and append to the genomes.
