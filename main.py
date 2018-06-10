@@ -47,9 +47,10 @@ genomes_size = 32
 genomes_count = 12
 genomes_index = 0
 genomes_generation = 1
+genomes_filename = 'genomes/1528251380.txt'
 
 #genomes = [Genome(length=genomes_size) for _ in range(genomes_count)]
-genomes = dino.conveniences.load_genomes_from_file("genomes/1528251380.txt", genomes_count, genomes_size)
+genomes = dino.conveniences.load_genomes_from_file(genomes_filename, genomes_count, genomes_size)
 
 layer_1 = NeuronLayer(number_of_neurons=4, number_of_inputs_per_neuron=3)
 layer_2 = NeuronLayer(number_of_neurons=4, number_of_inputs_per_neuron=4)
@@ -185,8 +186,8 @@ while(1):
     # learning the best network parameters. Commend the lines below to wait
     # for a keypress after each execution.
 
-    keyboard.tap_key('return')
-    time.sleep(0.1)
+    #keyboard.tap_key('return')
+    #time.sleep(0.1)
 
 '''
 Terminate.
