@@ -3,6 +3,7 @@
 #
 
 
+import time
 import datetime
 
 from PIL import Image, ImageDraw
@@ -177,31 +178,29 @@ def read(game_screenshot, dino_rect, previous_sensor_data):
     if previous_sensor_data is None:
 
         size = bounding_box[1][0]
+
         speed = -1
+        speeds = []
+        time_ms = time.time()/1000
 
     else:
 
+        size = previous_sensor_data[1]
+
+        time_ms = time.time()/1000
+        time_ms_delta = previous_sensor_data[4]
+
         previous_x = previous_sensor_data[3][0][0]
         current_x = bounding_box[0][0]
+        current_speed = (previous_x - current_x) / time_ms_delta
 
-        current_speed = (previous_x - current_x)
+        speeds = previous_sensor_data[5]
+        speeds.append(current_speed)
+
         previous_speed = previous_sensor_data[2]
-        previous_speed = current_speed if previous_speed == -1 else previous_speed
+        avg_speed = sum(speeds) / len(speeds)
+        speed = max(previous_speed, avg_speed)
 
-        size = previous_sensor_data[1]
-        speed = int(round(((previous_speed + current_speed)/2)))
+    # Return the enemy's distance, size, speed and some other stuff.
 
-    # Draw the enemy's bounding box, useful for debugging.
-
-    '''
-    xn = bounding_box[0][0] + bounding_box[1][0]
-    yn = bounding_box[0][1] + bounding_box[1][1]
-    bb = ((bounding_box[0][0], bounding_box[0][1]), (xn, yn))
-    draw = ImageDraw.Draw(game_screenshot)
-    draw.rectangle(bb, outline="pink")
-    game_screenshot.save("configuration/screenshots/box-"+str(datetime.datetime.now())+".png")
-    #'''
-
-    # Return the enemy's distance, size, speed and bounding box.
-
-    return True, jumped, [distance, size, speed, bounding_box]
+    return True, jumped, [distance, size, speed, bounding_box, time_ms, speeds]

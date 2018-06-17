@@ -31,4 +31,4 @@ Each program execution will create a new file in the genomes folder, it will per
 
 ## Notes:
 
-1. The libraries in use claim to work on multiple operating systems. Although, the program was developed and tested only on a machine running macOS.
+1. The libraries being used claim to work on multiple operating systems. Although, the program was developed and tested only on a machine running macOS. Most likely, the arrow down key won't be recognized on Linux or Windows, to fix this issue take a look [here](https://github.com/SavinaRoja/PyUserInput/issues/95). You'll need to change the arrow down key code with the one suitable for your OS.

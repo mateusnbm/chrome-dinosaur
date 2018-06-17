@@ -5,6 +5,7 @@
 #
 
 
+import random
 from numpy import exp, array, random, dot
 import numpy as np
 
@@ -21,11 +22,13 @@ class NeuronLayer():
     each neuron input, it is initialized with random numbers between -1 and 1.
     '''
 
-    def __init__(self, number_of_neurons, number_of_inputs_per_neuron):
+    def __init__(self, number_of_neurons, number_of_inputs_per_neuron, output_layer):
 
         i = number_of_inputs_per_neuron
         j = number_of_neurons
 
+        self.output_layer = output_layer
+        self.bias = random.uniform(-1, 1)
         self.number_of_neurons = j
         self.number_of_inputs_per_neuron = i
         self.synaptic_weights = 2 * np.random.random((i, j)) - 1
@@ -64,6 +67,12 @@ class NeuralNetwork():
             length = layer.number_of_neurons * layer.number_of_inputs_per_neuron
             starting_index += length
 
+            if layer.output_layer == False:
+
+                index = starting_index
+                layer.bias = genome.genes[index]
+                starting_index += 1
+
     '''
     Print network weights.
     '''
@@ -72,8 +81,9 @@ class NeuralNetwork():
 
         for layer in self.layers:
 
-            print(layer.synaptic_weights)
-            print("")
+            print('weights:' + str(layer.synaptic_weights))
+            print('bias:' + str(layer.bias))
+            print('')
 
     '''
     The Sigmoid function, which describes an S shaped curve.
@@ -96,7 +106,7 @@ class NeuralNetwork():
         return x * (1 - x)
 
     '''
-    Computer neural network output for a given input.
+    Compute neural network output for a given input.
     '''
 
     def think(self, inputs):
@@ -104,9 +114,14 @@ class NeuralNetwork():
         inputs = np.array(inputs, dtype=float)
 
         output = self.__sigmoid(dot(inputs, self.layers[0].synaptic_weights))
+        output = output + self.layers[0].bias
 
         for i in range(len(self.layers)-1):
 
             output = self.__sigmoid(dot(output, self.layers[i+1].synaptic_weights))
+
+            if self.layers[i+1].output_layer == False:
+
+                output = output + self.layers[i+1].bias
 
         return output
