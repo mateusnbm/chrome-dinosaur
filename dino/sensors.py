@@ -201,6 +201,17 @@ def read(game_screenshot, dino_rect, previous_sensor_data):
         avg_speed = sum(speeds) / len(speeds)
         speed = max(previous_speed, avg_speed)
 
+    # Draw the enemy's bounding box, useful for debugging.
+
+    '''
+    xn = bounding_box[0][0] + bounding_box[1][0]
+    yn = bounding_box[0][1] + bounding_box[1][1]
+    bb = ((bounding_box[0][0], bounding_box[0][1]), (xn, yn))
+    draw = ImageDraw.Draw(game_screenshot)
+    draw.rectangle(bb, outline="purple")
+    game_screenshot.save("configuration/screenshots/box-"+str(datetime.datetime.now())+".png")
+    '''
+
     # Return the enemy's distance, size, speed and some other stuff.
 
     return True, jumped, [distance, size, speed, bounding_box, time_ms, speeds]

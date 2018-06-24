@@ -51,7 +51,9 @@ class Genome():
 
     def get_fitness(self):
 
-        return self.fitnesses[-1] #sum(self.fitnesses)/len(self.fitnesses)
+        return self.fitnesses[-1]
+        #return sum(self.fitnesses)/len(self.fitnesses)
+        #return max(self.fitnesses)
 
     '''
     '''
@@ -94,4 +96,5 @@ class Genome():
 
             for i in range(len(self.genes)):
 
-                self.genes[i] +=  self.genes[i] * (random.uniform(0, 1) - 0.5) * 3 + (random.uniform(0, 1) - 0.5)
+                self.genes[i] += self.genes[i] * random.uniform(-0.5, 0.5)
+                #self.genes[i] +=  self.genes[i] * (random.uniform(0, 1) - 0.5) * 3 + (random.uniform(0, 1) - 0.5)

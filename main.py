@@ -49,7 +49,7 @@ genomes_index = 0
 genomes_generation = 1
 
 #genomes = [Genome(length=genomes_size) for _ in range(genomes_count)]
-genomes = dino.conveniences.load_genomes_from_file('genomes/0.txt', genomes_count, genomes_size)
+genomes = dino.conveniences.load_genomes_from_file('genomes/ninja.txt', genomes_count, genomes_size)
 
 layer_1 = NeuronLayer(number_of_neurons=4, number_of_inputs_per_neuron=3, output_layer=False)
 layer_2 = NeuronLayer(number_of_neurons=4, number_of_inputs_per_neuron=4, output_layer=False)
@@ -68,9 +68,6 @@ while(1):
 
     sensor_data = None
     jumps_count = 0
-
-    last_output = 'stand'
-    last_output_timestamp = time.time()
 
     # Place the cursor above Google Chrome and click twice, one to make it
     # the active window and the second to start the game.
@@ -110,13 +107,20 @@ while(1):
 
         read, jumped, sensor_data = dino.sensors.read(game_screenshot, dino_rect, sensor_data)
 
-        if jumped == True: jumps_count += 1
-        if read == False: continue
+        if jumped == True:
+            jumps_count += 1
+            keyboard.release_key('down')
+
+        if read == False:
+            keyboard.release_key('down')
+            continue
+
         if sensor_data[2] == -1: continue
 
         distance = sensor_data[0]
         size = sensor_data[1]
         speed = sensor_data[2]
+        bounding_box = sensor_data[3]
 
         # Run through the current genome network to determine the activation.
 
@@ -124,15 +128,14 @@ while(1):
 
         # Control dinosaur.
 
-        '''
-        last_output, last_output_timestamp = dino.conveniences.set_output(
-            activation,
-            last_output,
-            last_output_timestamp
-            )
-        '''
+        if bounding_box[0][1] < 130:
 
-        if activation > 0.55: keyboard.tap_key('space')
+            keyboard.press_key('down')
+
+        elif activation > 0.55:
+
+            keyboard.release_key('down')
+            keyboard.tap_key('space')
 
         # Display the updated metrics.
 

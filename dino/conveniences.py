@@ -4,35 +4,8 @@
 
 
 import csv
-import time
-
-from pykeyboard import PyKeyboard
 
 from dino.genetic import Genome
-
-
-'''
-'''
-
-def set_output(output, last_output, last_output_timestamp):
-
-    keyboard = PyKeyboard()
-
-    if output > 0.55:
-
-        keyboard.release_key('down')
-        keyboard.tap_key('space')
-        time.sleep(0.5)
-
-    elif output < 0.45:
-
-        keyboard.press_key('down')
-
-    else:
-
-        keyboard.release_key('down')
-
-    return 0, 0
 
 
 '''
