@@ -1,4 +1,6 @@
-# Chrome Dinosaur Game
+# Dino's AI
+
+![](configuration/gameplay.gif)
 
 ### How to run:
 
@@ -29,6 +31,8 @@ Each program execution will create a new file in the genomes folder, it will per
 
 1. There is a bug that may cause the program to miss the game over screen. If you face this situation: terminate, ignore the genomes file and restart. This bug is rare.
 
-## Notes:
+2. The libraries being used claim to work on multiple operating systems. Although, the program was developed and tested only on a machine running macOS. Most likely, the arrow down key won't be recognized on Linux or Windows, to fix this issue take a look [here](https://github.com/SavinaRoja/PyUserInput/issues/95). You'll need to change the arrow down key code with the one suitable for your OS.
 
-1. The libraries being used claim to work on multiple operating systems. Although, the program was developed and tested only on a machine running macOS. Most likely, the arrow down key won't be recognized on Linux or Windows, to fix this issue take a look [here](https://github.com/SavinaRoja/PyUserInput/issues/95). You'll need to change the arrow down key code with the one suitable for your OS.
+### Acknowledgments:
+
+Our work replicates the project [IMDinosaur](https://github.com/ivanseidel/IAMDinosaur) by [Ivan Seidel](https://github.com/ivanseidel), [João Pedro](https://github.com/joaopedrovbs) and [Tony Ngan](https://github.com/tngan). If you're interested in doing something similar and want a detailed explanation, check out Ivan's [video](https://www.youtube.com/watch?v=P7XHzqZjXQs&feature=youtu.be) on Youtube.
